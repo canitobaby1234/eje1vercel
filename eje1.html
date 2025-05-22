@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GM Restaurante - Deliciosa Comida</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-category {
+            margin-bottom: 2rem;
+        }
+
+        .menu-category h3 {
+            color: #e74c3c;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-align: center;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 0.5rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            border-color: #e74c3c;
+        }
+
+        .menu-item h4 {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-card h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(44, 62, 80, 0.9);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">🍕 GM Restaurante</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showPage('home')">Inicio</button>
+                <button class="nav-btn" onclick="showPage('menu')">Menú Completo</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Página de Inicio -->
+    <div id="home" class="page active">
+        <div class="container">
+            <section class="hero">
+                <h1>¡Bienvenidos a GM!</h1>
+                <p>El sabor auténtico que buscas, en cada bocado</p>
+                <p>🍔 Hamburguesas • 🍗 Alitas • 🌮 Tacos • 🍕 Pizza • 🥤 Bebidas</p>
+            </section>
+
+            <section class="menu-section">
+                <h2 style="text-align: center; color: #2c3e50; margin-bottom: 2rem; font-size: 2.2rem;">Nuestras Especialidades</h2>
+                
+                <div class="menu-category">
+                    <h3>🍔 Platillos Principales</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Hamburguesas</h4>
+                            <p>Jugosas y deliciosas, con ingredientes frescos</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Alitas</h4>
+                            <p>Crujientes y sazonadas a la perfección</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Pizza</h4>
+                            <p>Masa artesanal con los mejores ingredientes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>🌮 Comida Mexicana</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Tacos</h4>
+                            <p>Auténticos tacos con salsas caseras</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Sincronizadas</h4>
+                            <p>Quesadillas rellenas de jamón y queso</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Tortas</h4>
+                            <p>Pan crujiente con rellenos abundantes</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="contact-section">
+                <h2 style="color: #2c3e50; margin-bottom: 1rem;">¡Visítanos Hoy!</h2>
+                <p>Estamos listos para atenderte con la mejor comida y el mejor servicio</p>
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <h4>📍 Ubicación</h4>
+                        <p>Estamos ubicados en el corazón de la ciudad</p>
+                    </div>
+                    <div class="contact-card">
+                        <h4>⏰ Horarios</h4>
+                        <p>Lunes a Domingo<br>11:00 AM - 10:00 PM</p>
+                    </div>
+                    <div class="contact-card">
+                        <h4>📞 Contacto</h4>
+                        <p>¿Dudas? ¡Llámanos!<br>Servicio a domicilio disponible</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Página de Menú Completo -->
+    <div id="menu" class="page">
+        <div class="container">
+            <section class="hero">
+                <h1>Menú Completo</h1>
+                <p>Todos nuestros deliciosos platillos y bebidas</p>
+            </section>
+
+            <section class="menu-section">
+                <div class="menu-category">
+                    <h3>🍔 Hamburguesas</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Hamburguesa Clásica</h4>
+                            <p>Carne jugosa, lechuga, tomate, cebolla y salsa especial</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Hamburguesa con Queso</h4>
+                            <p>Nuestra clásica con delicioso queso derretido</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Hamburguesa Especial GM</h4>
+                            <p>Doble carne, tocino, queso y todos los vegetales</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>🍗 Alitas</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Alitas BBQ</h4>
+                            <p>Bañadas en salsa barbacoa dulce y ahumada</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Alitas Búfalo</h4>
+                            <p>Picantes con salsa búfalo tradicional</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Alitas al Limón</h4>
+                            <p>Marinadas con limón y especias aromáticas</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>🌮 Comida Mexicana</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Tacos de Carne</h4>
+                            <p>Tortilla suave con carne asada y salsa verde</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Tacos de Pollo</h4>
+                            <p>Pollo marinado con especias mexicanas</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Sincronizadas</h4>
+                            <p>Quesadilla con jamón, queso y pico de gallo</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Torta Ahogada</h4>
+                            <p>Pan crujiente bañado en salsa roja picante</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Torta Cubana</h4>
+                            <p>Con jamón, queso, aguacate y frijoles</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>🍕 Pizza</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Pizza Margarita</h4>
+                            <p>Clásica con tomate, mozzarella y albahaca</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Pizza Pepperoni</h4>
+                            <p>Con abundante pepperoni y queso</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Pizza Mexicana</h4>
+                            <p>Con jalapeños, chorizo y queso Oaxaca</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="menu-category">
+                    <h3>🥤 Bebidas</h3>
+                    <div class="menu-grid">
+                        <div class="menu-item">
+                            <h4>Refrescos</h4>
+                            <p>Coca-Cola • Manzanita Sol</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Cervezas</h4>
+                            <p>Modelo • Corona Extra</p>
+                        </div>
+                        <div class="menu-item">
+                            <h4>Jugos Boing</h4>
+                            <p>Mango • Guayaba</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 GM Restaurante - Todos los derechos reservados</p>
+            <p>Hecho con ❤️ para nuestros clientes</p>
+        </div>
+    </footer>
+
+    <script>
+        function showPage(pageId) {
+            // Ocultar todas las páginas
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            
+            // Mostrar la página seleccionada
+            document.getElementById(pageId).classList.add('active');
+            
+            // Actualizar botones de navegación
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Scroll hacia arriba
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Animaciones al cargar
+        window.addEventListener('load', function() {
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateY(20px)';
+                    item.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
